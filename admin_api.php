@@ -41,7 +41,7 @@ try {
     exit;
 }
 
-$action = $_GET['action'] ?? '';
+$action = $_GET['action'] ?? ($_POST['action'] ?? '');
 
 // 1. DataTables Server-Side Processing
 if ($action === 'list') {
