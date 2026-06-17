@@ -11,8 +11,13 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
 // CSRF Check for POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $headers = getallheaders();
-    $csrfToken = $headers['X-CSRF-Token'] ?? ($_POST['csrf_token'] ?? '');
+    $csrfToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? ($_POST['csrf_token'] ?? '');
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+        if (empty($csrfToken) && isset($headers['X-CSRF-Token'])) {
+            $csrfToken = $headers['X-CSRF-Token'];
+        }
+    }
     if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $csrfToken)) {
         http_response_code(403);
         echo json_encode(['error' => 'Invalid CSRF token']);

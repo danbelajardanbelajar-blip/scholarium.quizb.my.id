@@ -344,6 +344,9 @@ if ($is_logged_in) {
                     url: 'admin_api.php?action=list',
                     type: 'POST',
                     headers: { 'X-CSRF-Token': csrfToken },
+                    data: function(d) {
+                        d.csrf_token = csrfToken;
+                    },
                     error: function(xhr, error, thrown) {
                         console.error('DataTables Error:', xhr.responseText);
                         Swal.fire('Error', 'Gagal memuat data dari server.', 'error');
