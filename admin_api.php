@@ -70,13 +70,13 @@ if ($action === 'list') {
     $recordsFiltered = $stmtFiltered->fetchColumn();
 
     // Fetch data
-    $sql = "SELECT * FROM $tableName $where ORDER BY $orderBy $orderDir LIMIT :start, :length";
+    $start = max(0, intval($start));
+    $length = max(1, intval($length));
+    $sql = "SELECT * FROM $tableName $where ORDER BY $orderBy $orderDir LIMIT $start, $length";
     $stmtData = $pdo->prepare($sql);
     foreach ($params as $key => $val) {
         $stmtData->bindValue(":$key", $val);
     }
-    $stmtData->bindValue(':start', $start, PDO::PARAM_INT);
-    $stmtData->bindValue(':length', $length, PDO::PARAM_INT);
     $stmtData->execute();
     $data = $stmtData->fetchAll(PDO::FETCH_ASSOC);
 
